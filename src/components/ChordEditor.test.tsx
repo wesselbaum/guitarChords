@@ -89,4 +89,51 @@ describe('ChordEditor', () => {
     await userEvent.click(fingerButton)
     expect(fingerButton).toHaveTextContent('1')
   })
+
+  it('auto-detects barres when same finger is on same fret across multiple strings', async () => {
+    const barreChord: Chord = {
+      ...mockChord,
+      name: 'F',
+      strings: [1, 3, 3, 2, 1, 1],
+      fingers: [1, 3, 4, 2, 1, 1],
+      startFret: 1,
+      barres: [],
+    }
+    const handleSave = vi.fn()
+    render(
+      <ChordEditor onSave={handleSave} onCancel={() => {}} initialChord={barreChord} />
+    )
+    await userEvent.click(screen.getByRole('button', { name: /save/i }))
+    const savedChord = handleSave.mock.calls[0]![0] as Chord
+    expect(savedChord.barres).toEqual([1])
+  })
+
+  it('does not add barres when each finger appears only once', async () => {
+    const handleSave = vi.fn()
+    render(
+      <ChordEditor onSave={handleSave} onCancel={() => {}} initialChord={mockChord} />
+    )
+    await userEvent.click(screen.getByRole('button', { name: /save/i }))
+    const savedChord = handleSave.mock.calls[0]![0] as Chord
+    expect(savedChord.barres).toEqual([])
+  })
+
+  it('reuses finger number when clicking same fret on multiple strings', async () => {
+    const handleSave = vi.fn()
+    render(<ChordEditor onSave={handleSave} onCancel={() => {}} />)
+
+    // Click fret 1 on strings 1, 2, 3 (fret index 0 in editor)
+    await userEvent.click(screen.getByTestId('fret-1-0'))
+    await userEvent.click(screen.getByTestId('fret-2-0'))
+    await userEvent.click(screen.getByTestId('fret-3-0'))
+
+    await userEvent.click(screen.getByRole('button', { name: /save/i }))
+    const savedChord = handleSave.mock.calls[0]![0] as Chord
+
+    // All three strings should have finger 1 since they share fret 1
+    expect(savedChord.fingers[1]).toBe(1)
+    expect(savedChord.fingers[2]).toBe(1)
+    expect(savedChord.fingers[3]).toBe(1)
+    expect(savedChord.barres).toEqual([1])
+  })
 })

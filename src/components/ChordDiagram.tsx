@@ -1,44 +1,29 @@
 import type { Chord } from '../types/chord'
+import { getFingerColor } from '../data/fingerColors'
+import {
+  SIZES,
+  STRING_COUNT,
+  FRET_COUNT,
+  PADDING_TOP,
+  PADDING_LEFT,
+  calculateLayout,
+  getStringX,
+  getFretY,
+  getBarreStringSet,
+  findBarreFinger,
+} from './chordDiagramLayout'
+import type { DiagramSize } from './chordDiagramLayout'
 
 interface ChordDiagramProps {
   chord: Chord
-  size?: 'sm' | 'md' | 'lg'
-}
-
-const SIZES = {
-  sm: { width: 80, height: 100, fontSize: 10, dotRadius: 5, markerSize: 8 },
-  md: { width: 120, height: 150, fontSize: 14, dotRadius: 7, markerSize: 12 },
-  lg: { width: 160, height: 200, fontSize: 18, dotRadius: 9, markerSize: 14 },
-}
-
-const STRING_COUNT = 6
-const FRET_COUNT = 5
-const PADDING_TOP = 30
-const PADDING_BOTTOM = 10
-const PADDING_LEFT = 20
-const PADDING_RIGHT = 10
-
-function calculateLayout(width: number, height: number) {
-  const fretboardWidth = width - PADDING_LEFT - PADDING_RIGHT
-  const fretboardHeight = height - PADDING_TOP - PADDING_BOTTOM
-  const stringSpacing = fretboardWidth / (STRING_COUNT - 1)
-  const fretSpacing = fretboardHeight / FRET_COUNT
-
-  return { fretboardWidth, fretboardHeight, stringSpacing, fretSpacing }
-}
-
-function getStringX(index: number, stringSpacing: number): number {
-  return PADDING_LEFT + index * stringSpacing
-}
-
-function getFretY(fret: number, fretSpacing: number): number {
-  return PADDING_TOP + fret * fretSpacing
+  size?: DiagramSize
 }
 
 export function ChordDiagram({ chord, size = 'md' }: ChordDiagramProps) {
   const dims = SIZES[size]
   const layout = calculateLayout(dims.width, dims.height)
   const showNut = chord.startFret <= 1
+  const barreStringSet = getBarreStringSet(chord)
 
   return (
     <div className="flex flex-col items-center">
@@ -94,34 +79,16 @@ export function ChordDiagram({ chord, size = 'md' }: ChordDiagramProps) {
 
           if (fret === null) {
             return (
-              <text
-                key={`marker-${i}`}
-                x={x}
-                y={y}
-                textAnchor="middle"
-                fontSize={dims.markerSize}
-                fill="currentColor"
-              >
-                X
-              </text>
+              <text key={`marker-${i}`} x={x} y={y} textAnchor="middle"
+                fontSize={dims.markerSize} fill="currentColor">X</text>
             )
           }
-
           if (fret === 0) {
             return (
-              <text
-                key={`marker-${i}`}
-                x={x}
-                y={y}
-                textAnchor="middle"
-                fontSize={dims.markerSize}
-                fill="currentColor"
-              >
-                O
-              </text>
+              <text key={`marker-${i}`} x={x} y={y} textAnchor="middle"
+                fontSize={dims.markerSize} fill="currentColor">O</text>
             )
           }
-
           return null
         })}
 
@@ -138,32 +105,22 @@ export function ChordDiagram({ chord, size = 'md' }: ChordDiagramProps) {
           </text>
         )}
 
-        {/* Finger dots */}
+        {/* Finger dots (skip strings that are part of a barre) */}
         {chord.strings.map((fret, i) => {
           if (fret === null || fret === 0) return null
+          if (barreStringSet.has(i)) return null
 
           const displayFret = fret - chord.startFret + 1
           const x = getStringX(i, layout.stringSpacing)
           const y = getFretY(displayFret - 0.5, layout.fretSpacing)
-          const finger = chord.fingers[i]
+          const finger = chord.fingers[i] ?? null
 
           return (
             <g key={`dot-${i}`}>
-              <circle
-                cx={x}
-                cy={y}
-                r={dims.dotRadius}
-                fill="currentColor"
-              />
+              <circle cx={x} cy={y} r={dims.dotRadius} fill={getFingerColor(finger)} />
               {finger !== null && (
-                <text
-                  x={x}
-                  y={y + dims.dotRadius * 0.35}
-                  textAnchor="middle"
-                  fontSize={dims.dotRadius * 1.2}
-                  fill="white"
-                  className="dark:fill-gray-900"
-                >
+                <text x={x} y={y + dims.dotRadius * 0.35} textAnchor="middle"
+                  fontSize={dims.dotRadius * 1.2} fill="white" className="dark:fill-gray-900">
                   {finger}
                 </text>
               )}
@@ -171,36 +128,47 @@ export function ChordDiagram({ chord, size = 'md' }: ChordDiagramProps) {
           )
         })}
 
-        {/* Barre indicators */}
+        {/* Barre indicators (rounded rectangles) */}
         {chord.barres.map((barreFret) => {
           const displayFret = barreFret - chord.startFret + 1
+          const barreFinger = findBarreFinger(chord, barreFret)
           const barreStrings = chord.strings
-            .map((fret, i) => (fret !== null && fret >= barreFret ? i : -1))
+            .map((fret, i) =>
+              fret === barreFret && chord.fingers[i] === barreFinger ? i : -1
+            )
             .filter((i) => i >= 0)
 
           if (barreStrings.length < 2) return null
 
           const firstString = barreStrings[0]
           const lastString = barreStrings[barreStrings.length - 1]
-
           if (firstString === undefined || lastString === undefined) return null
 
           const x1 = getStringX(firstString, layout.stringSpacing)
           const x2 = getStringX(lastString, layout.stringSpacing)
           const y = getFretY(displayFret - 0.5, layout.fretSpacing)
+          const barreHeight = dims.dotRadius * 2
+          const cornerRadius = dims.dotRadius
 
           return (
-            <line
-              key={`barre-${barreFret}`}
-              x1={x1}
-              y1={y}
-              x2={x2}
-              y2={y}
-              stroke="currentColor"
-              strokeWidth={dims.dotRadius * 1.8}
-              strokeLinecap="round"
-              opacity={0.8}
-            />
+            <g key={`barre-${barreFret}`} data-testid={`barre-group-${barreFret}`}>
+              <rect
+                data-testid={`barre-${barreFret}`}
+                x={x1 - dims.dotRadius}
+                y={y - barreHeight / 2}
+                width={x2 - x1 + dims.dotRadius * 2}
+                height={barreHeight}
+                rx={cornerRadius}
+                ry={cornerRadius}
+                fill={getFingerColor(barreFinger)}
+              />
+              {barreFinger !== null && (
+                <text x={(x1 + x2) / 2} y={y + dims.dotRadius * 0.35} textAnchor="middle"
+                  fontSize={dims.dotRadius * 1.2} fill="white" className="dark:fill-gray-900">
+                  {barreFinger}
+                </text>
+              )}
+            </g>
           )
         })}
       </svg>

@@ -38,9 +38,16 @@ export function ChordEditor({ onSave, onCancel, initialChord }: ChordEditorProps
       newFingers[stringIndex] = null
     } else {
       newStrings[stringIndex] = fret
-      const usedFingers = new Set(newFingers.filter((f): f is 1 | 2 | 3 | 4 => f !== null))
-      const nextFinger = ([1, 2, 3, 4] as const).find((f) => !usedFingers.has(f)) ?? null
-      newFingers[stringIndex] = nextFinger
+      const existingFinger = newFingers.find(
+        (f, i) => f !== null && newStrings[i] === fret && i !== stringIndex
+      )
+      if (existingFinger != null) {
+        newFingers[stringIndex] = existingFinger
+      } else {
+        const usedFingers = new Set(newFingers.filter((f): f is 1 | 2 | 3 | 4 => f !== null))
+        const nextFinger = ([1, 2, 3, 4] as const).find((f) => !usedFingers.has(f)) ?? null
+        newFingers[stringIndex] = nextFinger
+      }
     }
     setStrings(newStrings)
     setFingers(newFingers)
@@ -69,6 +76,23 @@ export function ChordEditor({ onSave, onCancel, initialChord }: ChordEditorProps
     setFingers(newFingers)
   }
 
+  function detectBarres(): number[] {
+    const fingerFretCounts = new Map<string, number>()
+    strings.forEach((fret, i) => {
+      const finger = fingers[i]
+      if (fret === null || fret === 0 || finger === null) return
+      const key = `${finger}-${fret}`
+      fingerFretCounts.set(key, (fingerFretCounts.get(key) ?? 0) + 1)
+    })
+    const barres = new Set<number>()
+    for (const [key, count] of fingerFretCounts) {
+      if (count >= 2) {
+        barres.add(Number(key.split('-')[1]))
+      }
+    }
+    return [...barres].sort((a, b) => a - b)
+  }
+
   function handleSave() {
     const chord: Chord = {
       id: crypto.randomUUID(),
@@ -78,7 +102,7 @@ export function ChordEditor({ onSave, onCancel, initialChord }: ChordEditorProps
       strings,
       fingers,
       startFret,
-      barres: [],
+      barres: detectBarres(),
       isCustom: true,
     }
     onSave(chord)
