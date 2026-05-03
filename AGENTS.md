@@ -48,7 +48,7 @@ Use this section to skip exploratory reads on future tasks.
 src/
   App.tsx              — Root component. Header, sidebar, tab routing (picked|songs|editor)
   main.tsx             — Entry point (no tests needed)
-  types/chord.ts       — All shared types (Chord, Song, ThemeMode, etc.)
+  types/chord.ts       — All shared types (Chord incl. optional longName, Song, ThemeMode, etc.)
   data/defaultChords.ts — Built-in chord library
   hooks/
     useAppStore.ts     — Custom hook store: songs, customChords, hiddenDefaultChordIds, import/export
@@ -57,8 +57,8 @@ src/
   components/
     ChordLibrary.tsx   — Sidebar: search + root-note filter + chord grid + "New Chord" button
     ChordCard.tsx      — Single chord card: diagram + pick/unpick/template/delete buttons
-    ChordDiagram.tsx   — SVG chord diagram renderer (read-only)
-    ChordEditor.tsx    — Form: name/root/category/startFret + EditorFretboard + Save/Cancel
+    ChordDiagram.tsx   — SVG chord diagram renderer (read-only), shows name + optional longName
+    ChordEditor.tsx    — Form: name/longName/root/category/startFret + EditorFretboard + Save/Cancel
     EditorFretboard.tsx — Interactive SVG fretboard (click frets, toggle strings, cycle fingers)
     PickedChordsView.tsx — Default main view: picked chord grid + Save as Song + Clear All
     SongManager.tsx    — Saved songs list: Load/Delete per song

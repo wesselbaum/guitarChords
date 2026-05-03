@@ -28,9 +28,9 @@ export function ChordLibrary({
 
   const filtered = useMemo(() => {
     return chords.filter((chord) => {
-      const matchesSearch = chord.name
-        .toLowerCase()
-        .includes(search.toLowerCase())
+      const searchLower = search.toLowerCase()
+      const matchesSearch = chord.name.toLowerCase().includes(searchLower)
+        || (chord.longName?.toLowerCase().includes(searchLower) ?? false)
       const matchesRoot = rootFilter
         ? chord.rootNote.startsWith(rootFilter)
         : true

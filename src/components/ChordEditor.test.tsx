@@ -18,7 +18,7 @@ const mockChord: Chord = {
 describe('ChordEditor', () => {
   it('renders editor with empty fretboard when no initialChord', () => {
     render(<ChordEditor onSave={() => {}} onCancel={() => {}} />)
-    expect(screen.getByLabelText(/name/i)).toHaveValue('')
+    expect(screen.getByLabelText(/chord name/i)).toHaveValue('')
     expect(screen.getByRole('button', { name: /save/i })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /cancel/i })).toBeInTheDocument()
   })
@@ -27,7 +27,7 @@ describe('ChordEditor', () => {
     render(
       <ChordEditor onSave={() => {}} onCancel={() => {}} initialChord={mockChord} />
     )
-    expect(screen.getByLabelText(/name/i)).toHaveValue('Am')
+    expect(screen.getByLabelText(/chord name/i)).toHaveValue('Am')
   })
 
   it('calls onCancel when cancel button clicked', async () => {
@@ -40,7 +40,7 @@ describe('ChordEditor', () => {
   it('calls onSave with chord data when save button clicked', async () => {
     const handleSave = vi.fn()
     render(<ChordEditor onSave={handleSave} onCancel={() => {}} />)
-    await userEvent.type(screen.getByLabelText(/name/i), 'G')
+    await userEvent.type(screen.getByLabelText(/chord name/i), 'G')
     await userEvent.click(screen.getByRole('button', { name: /save/i }))
     expect(handleSave).toHaveBeenCalledOnce()
     const savedChord = handleSave.mock.calls[0]![0] as Chord
@@ -51,7 +51,7 @@ describe('ChordEditor', () => {
 
   it('updates name field when user types', async () => {
     render(<ChordEditor onSave={() => {}} onCancel={() => {}} />)
-    const input = screen.getByLabelText(/name/i)
+    const input = screen.getByLabelText(/chord name/i)
     await userEvent.type(input, 'Cmaj7')
     expect(input).toHaveValue('Cmaj7')
   })
@@ -116,6 +116,32 @@ describe('ChordEditor', () => {
     await userEvent.click(screen.getByRole('button', { name: /save/i }))
     const savedChord = handleSave.mock.calls[0]![0] as Chord
     expect(savedChord.barres).toEqual([])
+  })
+
+  it('renders long name input field', () => {
+    render(<ChordEditor onSave={() => {}} onCancel={() => {}} />)
+    expect(screen.getByLabelText(/long name/i)).toBeInTheDocument()
+  })
+
+  it('pre-fills long name from initialChord', () => {
+    const chordWithLongName: Chord = {
+      ...mockChord,
+      longName: 'A Minor',
+    }
+    render(
+      <ChordEditor onSave={() => {}} onCancel={() => {}} initialChord={chordWithLongName} />
+    )
+    expect(screen.getByLabelText(/long name/i)).toHaveValue('A Minor')
+  })
+
+  it('includes longName in saved chord data', async () => {
+    const handleSave = vi.fn()
+    render(<ChordEditor onSave={handleSave} onCancel={() => {}} />)
+    await userEvent.type(screen.getByLabelText(/chord name/i), 'Am')
+    await userEvent.type(screen.getByLabelText(/long name/i), 'A Minor')
+    await userEvent.click(screen.getByRole('button', { name: /save/i }))
+    const savedChord = handleSave.mock.calls[0]![0] as Chord
+    expect(savedChord.longName).toBe('A Minor')
   })
 
   it('save button has title attribute', () => {

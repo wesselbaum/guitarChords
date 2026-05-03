@@ -28,7 +28,10 @@ export function ChordDiagram({ chord, size = 'md', responsive = false }: ChordDi
 
   return (
     <div className="flex flex-col items-center">
-      <span className={`font-bold mb-1 dark:text-gray-100 ${responsive ? 'text-base' : 'text-sm'}`}>{chord.name}</span>
+      <span className={`font-bold mb-0.5 dark:text-gray-100 ${responsive ? 'text-base' : 'text-sm'}`}>{chord.name}</span>
+      {chord.longName && (
+        <span className={`text-gray-500 dark:text-gray-400 mb-1 ${responsive ? 'text-sm' : 'text-xs'}`}>{chord.longName}</span>
+      )}
       <svg
         {...(responsive
           ? { className: 'w-full h-auto text-gray-900 dark:text-gray-100' }

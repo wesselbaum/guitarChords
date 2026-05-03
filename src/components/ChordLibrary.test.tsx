@@ -147,6 +147,29 @@ describe('ChordLibrary', () => {
     expect(amCard).toBeInTheDocument()
   })
 
+  it('filters chords by long name search text', async () => {
+    const chordsWithLongNames: Chord[] = [
+      { ...chords[0]!, longName: 'A Minor' },
+      { ...chords[1]!, longName: 'C Major' },
+      { ...chords[2]!, longName: 'G Major' },
+    ]
+    render(
+      <ChordLibrary
+        chords={chordsWithLongNames}
+        pickedChordIds={[]}
+        onPick={() => {}}
+        onUnpick={() => {}}
+        onUseAsTemplate={() => {}}
+        onNewChord={() => {}}
+      />
+    )
+    await userEvent.type(screen.getByPlaceholderText(/search/i), 'Minor')
+    const grid = getChordGrid()
+    expect(within(grid).getByText('Am')).toBeInTheDocument()
+    expect(within(grid).queryByText('C')).not.toBeInTheDocument()
+    expect(within(grid).queryByText('G')).not.toBeInTheDocument()
+  })
+
   it('root note filter buttons have title attributes', () => {
     render(
       <ChordLibrary

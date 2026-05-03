@@ -5,6 +5,7 @@ export const defaultChords: Chord[] = [
   {
     id: 'c-major',
     name: 'C',
+    longName: 'C Major',
     rootNote: 'C',
     category: 'open',
     strings: [null, 3, 2, 0, 1, 0],
@@ -16,6 +17,7 @@ export const defaultChords: Chord[] = [
   {
     id: 'd-major',
     name: 'D',
+    longName: 'D Major',
     rootNote: 'D',
     category: 'open',
     strings: [null, null, 0, 2, 3, 2],
@@ -27,6 +29,7 @@ export const defaultChords: Chord[] = [
   {
     id: 'e-major',
     name: 'E',
+    longName: 'E Major',
     rootNote: 'E',
     category: 'open',
     strings: [0, 2, 2, 1, 0, 0],
@@ -38,6 +41,7 @@ export const defaultChords: Chord[] = [
   {
     id: 'g-major',
     name: 'G',
+    longName: 'G Major',
     rootNote: 'G',
     category: 'open',
     strings: [3, 2, 0, 0, 0, 3],
@@ -49,6 +53,7 @@ export const defaultChords: Chord[] = [
   {
     id: 'a-major',
     name: 'A',
+    longName: 'A Major',
     rootNote: 'A',
     category: 'open',
     strings: [null, 0, 2, 2, 2, 0],
@@ -62,6 +67,7 @@ export const defaultChords: Chord[] = [
   {
     id: 'am',
     name: 'Am',
+    longName: 'A Minor',
     rootNote: 'A',
     category: 'minor',
     strings: [null, 0, 2, 2, 1, 0],
@@ -73,6 +79,7 @@ export const defaultChords: Chord[] = [
   {
     id: 'dm',
     name: 'Dm',
+    longName: 'D Minor',
     rootNote: 'D',
     category: 'minor',
     strings: [null, null, 0, 2, 3, 1],
@@ -84,6 +91,7 @@ export const defaultChords: Chord[] = [
   {
     id: 'em',
     name: 'Em',
+    longName: 'E Minor',
     rootNote: 'E',
     category: 'minor',
     strings: [0, 2, 2, 0, 0, 0],
@@ -97,6 +105,7 @@ export const defaultChords: Chord[] = [
   {
     id: 'a7',
     name: 'A7',
+    longName: 'A Dominant 7th',
     rootNote: 'A',
     category: '7th',
     strings: [null, 0, 2, 0, 2, 0],
@@ -108,6 +117,7 @@ export const defaultChords: Chord[] = [
   {
     id: 'b7',
     name: 'B7',
+    longName: 'B Dominant 7th',
     rootNote: 'B',
     category: '7th',
     strings: [null, 2, 1, 2, 0, 2],
@@ -119,6 +129,7 @@ export const defaultChords: Chord[] = [
   {
     id: 'c7',
     name: 'C7',
+    longName: 'C Dominant 7th',
     rootNote: 'C',
     category: '7th',
     strings: [null, 3, 2, 3, 1, 0],
@@ -130,6 +141,7 @@ export const defaultChords: Chord[] = [
   {
     id: 'd7',
     name: 'D7',
+    longName: 'D Dominant 7th',
     rootNote: 'D',
     category: '7th',
     strings: [null, null, 0, 2, 1, 2],
@@ -141,6 +153,7 @@ export const defaultChords: Chord[] = [
   {
     id: 'e7',
     name: 'E7',
+    longName: 'E Dominant 7th',
     rootNote: 'E',
     category: '7th',
     strings: [0, 2, 0, 1, 0, 0],
@@ -152,6 +165,7 @@ export const defaultChords: Chord[] = [
   {
     id: 'g7',
     name: 'G7',
+    longName: 'G Dominant 7th',
     rootNote: 'G',
     category: '7th',
     strings: [3, 2, 0, 0, 0, 1],
@@ -165,6 +179,7 @@ export const defaultChords: Chord[] = [
   {
     id: 'am7',
     name: 'Am7',
+    longName: 'A Minor 7th',
     rootNote: 'A',
     category: 'min7',
     strings: [null, 0, 2, 0, 1, 0],
@@ -176,6 +191,7 @@ export const defaultChords: Chord[] = [
   {
     id: 'dm7',
     name: 'Dm7',
+    longName: 'D Minor 7th',
     rootNote: 'D',
     category: 'min7',
     strings: [null, null, 0, 2, 1, 1],
@@ -187,6 +203,7 @@ export const defaultChords: Chord[] = [
   {
     id: 'em7',
     name: 'Em7',
+    longName: 'E Minor 7th',
     rootNote: 'E',
     category: 'min7',
     strings: [0, 2, 0, 0, 0, 0],
@@ -200,6 +217,7 @@ export const defaultChords: Chord[] = [
   {
     id: 'cmaj7',
     name: 'Cmaj7',
+    longName: 'C Major 7th',
     rootNote: 'C',
     category: 'maj7',
     strings: [null, 3, 2, 0, 0, 0],
@@ -211,6 +229,7 @@ export const defaultChords: Chord[] = [
   {
     id: 'fmaj7',
     name: 'Fmaj7',
+    longName: 'F Major 7th',
     rootNote: 'F',
     category: 'maj7',
     strings: [null, null, 3, 2, 1, 0],
@@ -222,6 +241,7 @@ export const defaultChords: Chord[] = [
   {
     id: 'gmaj7',
     name: 'Gmaj7',
+    longName: 'G Major 7th',
     rootNote: 'G',
     category: 'maj7',
     strings: [3, 2, 0, 0, 0, 2],
@@ -235,6 +255,7 @@ export const defaultChords: Chord[] = [
   {
     id: 'dsus2',
     name: 'Dsus2',
+    longName: 'D Suspended 2nd',
     rootNote: 'D',
     category: 'sus',
     strings: [null, null, 0, 2, 3, 0],
@@ -246,6 +267,7 @@ export const defaultChords: Chord[] = [
   {
     id: 'dsus4',
     name: 'Dsus4',
+    longName: 'D Suspended 4th',
     rootNote: 'D',
     category: 'sus',
     strings: [null, null, 0, 2, 3, 3],
@@ -257,6 +279,7 @@ export const defaultChords: Chord[] = [
   {
     id: 'asus2',
     name: 'Asus2',
+    longName: 'A Suspended 2nd',
     rootNote: 'A',
     category: 'sus',
     strings: [null, 0, 2, 2, 0, 0],
@@ -268,6 +291,7 @@ export const defaultChords: Chord[] = [
   {
     id: 'asus4',
     name: 'Asus4',
+    longName: 'A Suspended 4th',
     rootNote: 'A',
     category: 'sus',
     strings: [null, 0, 2, 2, 3, 0],
@@ -279,6 +303,7 @@ export const defaultChords: Chord[] = [
   {
     id: 'esus4',
     name: 'Esus4',
+    longName: 'E Suspended 4th',
     rootNote: 'E',
     category: 'sus',
     strings: [0, 2, 2, 2, 0, 0],
@@ -292,6 +317,7 @@ export const defaultChords: Chord[] = [
   {
     id: 'cadd9',
     name: 'Cadd9',
+    longName: 'C Add 9th',
     rootNote: 'C',
     category: 'add',
     strings: [null, 3, 2, 0, 3, 0],
@@ -303,6 +329,7 @@ export const defaultChords: Chord[] = [
   {
     id: 'gadd9',
     name: 'Gadd9',
+    longName: 'G Add 9th',
     rootNote: 'G',
     category: 'add',
     strings: [3, 2, 0, 2, 0, 3],
@@ -316,6 +343,7 @@ export const defaultChords: Chord[] = [
   {
     id: 'f-major',
     name: 'F',
+    longName: 'F Major',
     rootNote: 'F',
     category: 'barre',
     strings: [1, 3, 3, 2, 1, 1],
@@ -327,6 +355,7 @@ export const defaultChords: Chord[] = [
   {
     id: 'bb-major',
     name: 'Bb',
+    longName: 'B Flat Major',
     rootNote: 'Bb',
     category: 'barre',
     strings: [null, 1, 3, 3, 3, 1],
@@ -338,6 +367,7 @@ export const defaultChords: Chord[] = [
   {
     id: 'b-major',
     name: 'B',
+    longName: 'B Major',
     rootNote: 'B',
     category: 'barre',
     strings: [null, 2, 4, 4, 4, 2],
@@ -351,6 +381,7 @@ export const defaultChords: Chord[] = [
   {
     id: 'bm',
     name: 'Bm',
+    longName: 'B Minor',
     rootNote: 'B',
     category: 'barre',
     strings: [null, 2, 4, 4, 3, 2],
@@ -362,6 +393,7 @@ export const defaultChords: Chord[] = [
   {
     id: 'f-sharp-m',
     name: 'F#m',
+    longName: 'F Sharp Minor',
     rootNote: 'F#',
     category: 'barre',
     strings: [2, 4, 4, 2, 2, 2],
@@ -373,6 +405,7 @@ export const defaultChords: Chord[] = [
   {
     id: 'c-sharp-m',
     name: 'C#m',
+    longName: 'C Sharp Minor',
     rootNote: 'C#',
     category: 'barre',
     strings: [null, 4, 6, 6, 5, 4],
@@ -384,6 +417,7 @@ export const defaultChords: Chord[] = [
   {
     id: 'gm',
     name: 'Gm',
+    longName: 'G Minor',
     rootNote: 'G',
     category: 'barre',
     strings: [3, 5, 5, 3, 3, 3],
@@ -397,6 +431,7 @@ export const defaultChords: Chord[] = [
   {
     id: 'e5',
     name: 'E5',
+    longName: 'E Power Chord',
     rootNote: 'E',
     category: 'power',
     strings: [0, 2, 2, null, null, null],
@@ -408,6 +443,7 @@ export const defaultChords: Chord[] = [
   {
     id: 'a5',
     name: 'A5',
+    longName: 'A Power Chord',
     rootNote: 'A',
     category: 'power',
     strings: [null, 0, 2, 2, null, null],
@@ -419,6 +455,7 @@ export const defaultChords: Chord[] = [
   {
     id: 'd5',
     name: 'D5',
+    longName: 'D Power Chord',
     rootNote: 'D',
     category: 'power',
     strings: [null, null, 0, 2, 3, null],
@@ -430,6 +467,7 @@ export const defaultChords: Chord[] = [
   {
     id: 'g5',
     name: 'G5',
+    longName: 'G Power Chord',
     rootNote: 'G',
     category: 'power',
     strings: [3, 5, 5, null, null, null],
@@ -443,6 +481,7 @@ export const defaultChords: Chord[] = [
   {
     id: 'bdim',
     name: 'Bdim',
+    longName: 'B Diminished',
     rootNote: 'B',
     category: 'dim',
     strings: [null, 2, 3, 4, 3, null],
@@ -454,6 +493,7 @@ export const defaultChords: Chord[] = [
   {
     id: 'c-sharp-dim',
     name: 'C#dim',
+    longName: 'C Sharp Diminished',
     rootNote: 'C#',
     category: 'dim',
     strings: [null, 4, 5, 6, 5, null],
@@ -467,6 +507,7 @@ export const defaultChords: Chord[] = [
   {
     id: 'caug',
     name: 'Caug',
+    longName: 'C Augmented',
     rootNote: 'C',
     category: 'aug',
     strings: [null, 3, 2, 1, 1, 0],
@@ -478,6 +519,7 @@ export const defaultChords: Chord[] = [
   {
     id: 'eaug',
     name: 'Eaug',
+    longName: 'E Augmented',
     rootNote: 'E',
     category: 'aug',
     strings: [0, 3, 2, 1, 1, 0],

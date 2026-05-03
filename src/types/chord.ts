@@ -26,6 +26,7 @@ export type ChordCategory =
 export interface Chord {
   id: string
   name: string
+  longName?: string
   rootNote: RootNote
   category: ChordCategory
   strings: [StringFret, StringFret, StringFret, StringFret, StringFret, StringFret]

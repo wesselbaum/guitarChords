@@ -20,6 +20,20 @@ describe('ChordDiagram', () => {
     expect(screen.getByText('Am')).toBeInTheDocument()
   })
 
+  it('renders long name below short name when provided', () => {
+    const chordWithLongName: Chord = {
+      ...amChord,
+      longName: 'A Minor',
+    }
+    render(<ChordDiagram chord={chordWithLongName} />)
+    expect(screen.getByText('A Minor')).toBeInTheDocument()
+  })
+
+  it('does not render long name when not provided', () => {
+    render(<ChordDiagram chord={amChord} />)
+    expect(screen.queryByText('A Minor')).not.toBeInTheDocument()
+  })
+
   it('renders an SVG element', () => {
     const { container } = render(<ChordDiagram chord={amChord} />)
     expect(container.querySelector('svg')).toBeInTheDocument()

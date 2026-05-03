@@ -23,6 +23,7 @@ const EMPTY_FINGERS: [FingerNumber, FingerNumber, FingerNumber, FingerNumber, Fi
 
 export function ChordEditor({ onSave, onCancel, initialChord }: ChordEditorProps) {
   const [name, setName] = useState(initialChord?.name ?? '')
+  const [longName, setLongName] = useState(initialChord?.longName ?? '')
   const [rootNote, setRootNote] = useState<RootNote>(initialChord?.rootNote ?? 'C')
   const [category, setCategory] = useState<ChordCategory>(initialChord?.category ?? 'open')
   const [startFret, setStartFret] = useState(initialChord?.startFret ?? 1)
@@ -97,6 +98,7 @@ export function ChordEditor({ onSave, onCancel, initialChord }: ChordEditorProps
     const chord: Chord = {
       id: crypto.randomUUID(),
       name,
+      longName: longName || undefined,
       rootNote,
       category,
       strings,
@@ -110,18 +112,17 @@ export function ChordEditor({ onSave, onCancel, initialChord }: ChordEditorProps
 
   return (
     <div className="flex flex-col gap-4 p-4 bg-white dark:bg-gray-800 rounded-lg shadow">
-      <div className="flex flex-col gap-2">
-        <label htmlFor="chord-name" className="text-sm font-medium dark:text-gray-200">
-          Chord Name
-        </label>
-        <input
-          id="chord-name"
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          className="border rounded px-2 py-1 dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600"
-          placeholder="e.g. Am7"
-        />
+      <div className="flex gap-4">
+        <div className="flex flex-col gap-1 flex-1">
+          <label htmlFor="chord-name" className="text-sm font-medium dark:text-gray-200">Chord Name</label>
+          <input id="chord-name" type="text" value={name} onChange={(e) => setName(e.target.value)}
+            className="border rounded px-2 py-1 dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600" placeholder="e.g. Am7" />
+        </div>
+        <div className="flex flex-col gap-1 flex-1">
+          <label htmlFor="long-name" className="text-sm font-medium dark:text-gray-200">Long Name</label>
+          <input id="long-name" type="text" value={longName} onChange={(e) => setLongName(e.target.value)}
+            className="border rounded px-2 py-1 dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600" placeholder="e.g. A Minor 7th" />
+        </div>
       </div>
 
       <div className="flex gap-4">
