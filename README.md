@@ -1,5 +1,7 @@
 # Guitar Chords
 
+**Live:** https://wesselbaum.github.io/guitarChords/
+
 Browser-based guitar chord reference app for beginners. Browse a built-in chord library, pick chords as a "cheat sheet" for songs, and create custom chords with a visual fretboard editor. Save songs, switch themes (light/dark/system), and export/import data as JSON. No backend — pure static SPA.
 
 ## Features
