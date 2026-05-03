@@ -54,6 +54,7 @@ src/
     useAppStore.ts     — Custom hook store: songs, customChords, hiddenDefaultChordIds, import/export
     useTheme.ts        — Theme state (light/dark/system) + localStorage sync
     useKeyboardShortcuts.ts — Global hotkeys (/, Esc, Ctrl+E, Ctrl+P, Ctrl+Shift+D)
+    useWakeLock.ts     — Wake Lock API hook: toggle screen-awake for playing guitar
   components/
     ChordLibrary.tsx   — Sidebar: search + root-note filter + chord grid + "New Chord" button
     ChordCard.tsx      — Single chord card: diagram + pick/unpick/template/delete buttons
@@ -65,6 +66,7 @@ src/
     ViewTabs.tsx       — Tab navigation between Picked Chords and Saved Songs views
     ThemeToggle.tsx    — Theme cycle button (light→dark→system)
     ExportImport.tsx   — Export/Import JSON backup buttons
+    WakeLockToggle.tsx — Toggle button to keep screen awake (hidden if API unsupported)
     FingerLegend.tsx   — Color legend for finger numbers
 ```
 

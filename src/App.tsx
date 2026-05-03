@@ -4,12 +4,14 @@ import { defaultChords } from './data/defaultChords'
 import { useAppStore } from './hooks/useAppStore'
 import { useTheme } from './hooks/useTheme'
 import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts'
+import { useWakeLock } from './hooks/useWakeLock'
 import { ChordLibrary } from './components/ChordLibrary'
 import { PickedChordsView } from './components/PickedChordsView'
 import { SongManager } from './components/SongManager'
 import { ChordEditor } from './components/ChordEditor'
 import { ThemeToggle } from './components/ThemeToggle'
 import { ExportImport } from './components/ExportImport'
+import { WakeLockToggle } from './components/WakeLockToggle'
 import { FingerLegend } from './components/FingerLegend'
 import { ViewTabs } from './components/ViewTabs'
 
@@ -19,6 +21,7 @@ const THEME_CYCLE = { light: 'dark', dark: 'system', system: 'light' } as const
 function App() {
   const { theme, setTheme } = useTheme()
   const store = useAppStore()
+  const wakeLock = useWakeLock()
   const [mainView, setMainView] = useState<MainView>('picked')
   const [pickedChordIds, setPickedChordIds] = useState<string[]>([])
   const [editorChord, setEditorChord] = useState<Chord | undefined>(undefined)
@@ -117,6 +120,7 @@ function App() {
           <h1 className="text-xl font-bold">Guitar Chord Reference</h1>
         </div>
         <div className="flex items-center gap-3">
+          <WakeLockToggle isActive={wakeLock.isActive} isSupported={wakeLock.isSupported} onToggle={wakeLock.toggle} />
           <ExportImport onExport={store.exportData} onImport={store.importData} />
           <ThemeToggle theme={theme} onToggle={handleThemeToggle} />
         </div>
