@@ -1,4 +1,5 @@
 import type { StringFret, FingerNumber } from '../types/chord'
+import { getFingerColor } from '../data/fingerColors'
 
 interface EditorFretboardProps {
   strings: [StringFret, StringFret, StringFret, StringFret, StringFret, StringFret]
@@ -129,17 +130,17 @@ export function EditorFretboard({
         const displayFret = fret - startFret + 1
         const x = stringX(i, layout.stringSpacing)
         const y = fretY(displayFret - 0.5, layout.fretSpacing)
-        const finger = fingers[i]
+        const finger = fingers[i] ?? null
         return (
           <g key={`dot-${i}`}>
-            <circle cx={x} cy={y} r={DOT_RADIUS} fill="currentColor" />
+            <circle cx={x} cy={y} r={DOT_RADIUS} fill={getFingerColor(finger)} />
             {finger !== null && (
               <g
                 data-testid={`finger-btn-${i}`}
                 className="cursor-pointer"
                 onClick={(e) => { e.stopPropagation(); onFingerClick(i) }}
               >
-                <circle cx={x} cy={y} r={DOT_RADIUS} fill="currentColor" opacity={0} />
+                <circle cx={x} cy={y} r={DOT_RADIUS} fill={getFingerColor(finger)} opacity={0} />
                 <text x={x} y={y + DOT_RADIUS * 0.35} textAnchor="middle" fontSize={DOT_RADIUS * 1.2} fill="white" className="dark:fill-gray-900 pointer-events-none">
                   {finger}
                 </text>

@@ -9,6 +9,7 @@ import { SongView } from './components/SongView'
 import { ChordEditor } from './components/ChordEditor'
 import { ThemeToggle } from './components/ThemeToggle'
 import { ExportImport } from './components/ExportImport'
+import { FingerLegend } from './components/FingerLegend'
 
 type MainView = 'song' | 'editor'
 const THEME_CYCLE = { light: 'dark', dark: 'system', system: 'light' } as const
@@ -182,6 +183,11 @@ function App() {
             </div>
           )}
         </main>
+      </div>
+
+      {/* Finger color legend — bottom right */}
+      <div className="fixed bottom-4 right-4 z-10 opacity-80 hover:opacity-100 transition-opacity print:hidden">
+        <FingerLegend />
       </div>
     </div>
   )
