@@ -1,0 +1,34 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@media print {
+  .print\:hidden {
+    display: none !important;
+  }
+
+  body {
+    background: white !important;
+    color: black !important;
+  }
+
+  main {
+    overflow: visible !important;
+  }
+
+  svg {
+    color: black !important;
+  }
+
+  svg text {
+    fill: black !important;
+  }
+
+  svg circle {
+    fill: black !important;
+  }
+
+  svg text.dark\:fill-gray-900 {
+    fill: white !important;
+  }
+}
