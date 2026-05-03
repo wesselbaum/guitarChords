@@ -37,6 +37,7 @@ export function ChordCard({
           <button
             onClick={() => onRemoveFromSong(chord.id)}
             aria-label="Remove from song"
+            title="Remove from song"
             className="text-xs px-2 py-0.5 rounded bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300 hover:bg-red-200 dark:hover:bg-red-800"
           >
             -
@@ -45,6 +46,7 @@ export function ChordCard({
           <button
             onClick={() => onAddToSong(chord.id)}
             aria-label="Add to song"
+            title="Add to song"
             className="text-xs px-2 py-0.5 rounded bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 hover:bg-green-200 dark:hover:bg-green-800"
           >
             +
@@ -55,6 +57,7 @@ export function ChordCard({
           <button
             onClick={() => onUseAsTemplate(chord)}
             aria-label="Use as template"
+            title="Use as template"
             className="text-xs px-2 py-0.5 rounded bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700"
           >
             ⎘

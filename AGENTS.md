@@ -38,6 +38,45 @@ Config files, CSS-only changes, pure type definitions, `main.tsx` entry point.
 - Export types from `src/types/` — single source of truth.
 - Run `npm run test:run`, `npm run lint`, and `npm run typecheck` before committing. Zero warnings.
 
+## Codebase Quick Reference
+
+Use this section to skip exploratory reads on future tasks.
+
+### Source Structure
+
+```
+src/
+  App.tsx              — Root component. Header, sidebar, main view routing (song|editor)
+  main.tsx             — Entry point (no tests needed)
+  types/chord.ts       — All shared types (Chord, Song, ThemeMode, etc.)
+  data/defaultChords.ts — Built-in chord library
+  hooks/
+    useAppStore.ts     — Zustand store: songs, customChords, hiddenDefaultChordIds, import/export
+    useTheme.ts        — Theme state (light/dark/system) + localStorage sync
+    useKeyboardShortcuts.ts — Global hotkeys (/, Esc, Ctrl+E, Ctrl+P, Ctrl+Shift+D)
+  components/
+    ChordLibrary.tsx   — Sidebar: search + root-note filter + chord grid + "New Chord" button
+    ChordCard.tsx      — Single chord card: diagram + add/remove/template buttons
+    ChordDiagram.tsx   — SVG chord diagram renderer (read-only)
+    ChordEditor.tsx    — Form: name/root/category/startFret + EditorFretboard + Save/Cancel
+    EditorFretboard.tsx — Interactive SVG fretboard (click frets, toggle strings, cycle fingers)
+    SongView.tsx       — Song selector + name input + Save/Delete/Print + chord strip with remove
+    ThemeToggle.tsx    — Theme cycle button (light→dark→system)
+    ExportImport.tsx   — Export/Import JSON backup buttons
+    FingerLegend.tsx   — Color legend for finger numbers
+```
+
+### Button Inventory
+
+All `<button>` elements have `aria-label` and/or `title` attributes. SVG click targets in `EditorFretboard.tsx` use `data-testid` only (no `title`/`aria-label` — they are non-semantic hit zones).
+
+### Test Patterns
+
+- Co-located: `Component.test.tsx` next to `Component.tsx`
+- Query buttons via `screen.getByRole('button', { name: /pattern/i })`
+- SVG elements via `screen.getByTestId('fret-{s}-{f}')` or `'finger-btn-{i}'`
+- Fixtures: inline `Chord`/`Song` objects, `vi.fn()` for callbacks
+
 ## Completion Checklist
 
 Before marking any task done:
@@ -47,3 +86,4 @@ Before marking any task done:
 - [ ] All tests green after refactor
 - [ ] No `any` types, no debug artifacts, no files > 200 lines
 - [ ] No unused imports or variables
+- [ ] AGENTS.md updated if code changes affect structure, components, buttons, or test patterns

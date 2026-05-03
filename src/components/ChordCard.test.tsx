@@ -62,4 +62,19 @@ describe('ChordCard', () => {
     render(<ChordCard chord={amChord} />)
     expect(screen.queryByText('Custom')).not.toBeInTheDocument()
   })
+
+  it('add-to-song button has title attribute', () => {
+    render(<ChordCard chord={amChord} onAddToSong={() => {}} />)
+    expect(screen.getByRole('button', { name: /add.*song/i })).toHaveAttribute('title')
+  })
+
+  it('remove-from-song button has title attribute', () => {
+    render(<ChordCard chord={amChord} isInSong onRemoveFromSong={() => {}} />)
+    expect(screen.getByRole('button', { name: /remove.*song/i })).toHaveAttribute('title')
+  })
+
+  it('use-as-template button has title attribute', () => {
+    render(<ChordCard chord={amChord} onUseAsTemplate={() => {}} />)
+    expect(screen.getByRole('button', { name: /template/i })).toHaveAttribute('title')
+  })
 })

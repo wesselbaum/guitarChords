@@ -29,4 +29,9 @@ describe('ThemeToggle', () => {
     render(<ThemeToggle theme="system" onToggle={() => {}} />)
     expect(screen.getByTestId('icon-system')).toBeInTheDocument()
   })
+
+  it('has title attribute describing button purpose', () => {
+    render(<ThemeToggle theme="light" onToggle={() => {}} />)
+    expect(screen.getByRole('button', { name: /theme/i })).toHaveAttribute('title')
+  })
 })

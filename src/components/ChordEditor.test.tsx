@@ -118,6 +118,16 @@ describe('ChordEditor', () => {
     expect(savedChord.barres).toEqual([])
   })
 
+  it('save button has title attribute', () => {
+    render(<ChordEditor onSave={() => {}} onCancel={() => {}} />)
+    expect(screen.getByRole('button', { name: /save/i })).toHaveAttribute('title')
+  })
+
+  it('cancel button has title attribute', () => {
+    render(<ChordEditor onSave={() => {}} onCancel={() => {}} />)
+    expect(screen.getByRole('button', { name: /cancel/i })).toHaveAttribute('title')
+  })
+
   it('reuses finger number when clicking same fret on multiple strings', async () => {
     const handleSave = vi.fn()
     render(<ChordEditor onSave={handleSave} onCancel={() => {}} />)

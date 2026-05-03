@@ -44,6 +44,7 @@ export function ExportImport({ onExport, onImport }: ExportImportProps) {
       <button
         onClick={handleExport}
         aria-label="Export data"
+        title="Export data as JSON backup"
         className="px-3 py-1.5 text-sm rounded border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-gray-200"
       >
         Export
@@ -51,6 +52,7 @@ export function ExportImport({ onExport, onImport }: ExportImportProps) {
       <button
         onClick={handleImportClick}
         aria-label="Import data"
+        title="Import data from JSON backup"
         className="px-3 py-1.5 text-sm rounded border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-gray-200"
       >
         Import

@@ -99,4 +99,32 @@ describe('SongView', () => {
     await userEvent.click(screen.getByRole('button', { name: /new song/i }))
     expect(onNewSong).toHaveBeenCalled()
   })
+
+  it('new song button has title attribute', () => {
+    render(<SongView {...defaultProps} currentSong={null} />)
+    expect(screen.getByRole('button', { name: /new song/i })).toHaveAttribute('title')
+  })
+
+  it('save button has title attribute', () => {
+    render(<SongView {...defaultProps} currentSong={testSong} />)
+    expect(screen.getByRole('button', { name: /save/i })).toHaveAttribute('title')
+  })
+
+  it('delete button has title attribute', () => {
+    render(<SongView {...defaultProps} currentSong={testSong} />)
+    expect(screen.getByRole('button', { name: /delete/i })).toHaveAttribute('title')
+  })
+
+  it('print button has title attribute', () => {
+    render(<SongView {...defaultProps} currentSong={testSong} />)
+    expect(screen.getByRole('button', { name: /print/i })).toHaveAttribute('title')
+  })
+
+  it('remove chord button has title attribute', () => {
+    render(<SongView {...defaultProps} currentSong={testSong} />)
+    const removeButtons = screen.getAllByRole('button', { name: /remove/i })
+    removeButtons.forEach((btn) => {
+      expect(btn).toHaveAttribute('title')
+    })
+  })
 })

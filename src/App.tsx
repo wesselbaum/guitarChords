@@ -111,6 +111,7 @@ function App() {
             onClick={() => setSidebarOpen((o) => !o)}
             className="lg:hidden p-1.5 rounded hover:bg-gray-200 dark:hover:bg-gray-700"
             aria-label="Toggle sidebar"
+            title="Toggle sidebar"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />

@@ -57,6 +57,7 @@ export function ChordLibrary({
               key={note}
               onClick={() => handleRootClick(note)}
               aria-label={note}
+              title={`Filter by root note ${note}`}
               className={`px-2 py-0.5 text-xs rounded font-medium transition-colors ${
                 rootFilter === note
                   ? 'bg-blue-500 text-white'
@@ -88,6 +89,7 @@ export function ChordLibrary({
         <button
           onClick={onNewChord}
           aria-label="New chord"
+          title="Create a new custom chord"
           className="w-full py-2 text-sm font-medium rounded bg-blue-500 text-white hover:bg-blue-600 transition-colors"
         >
           + New Chord

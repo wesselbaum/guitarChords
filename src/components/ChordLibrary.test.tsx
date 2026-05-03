@@ -146,4 +146,33 @@ describe('ChordLibrary', () => {
     const amCard = within(grid).getByText('Am').closest('[class*="ring-2"]')
     expect(amCard).toBeInTheDocument()
   })
+
+  it('root note filter buttons have title attributes', () => {
+    render(
+      <ChordLibrary
+        chords={chords}
+        songChordIds={[]}
+        onAddToSong={() => {}}
+        onRemoveFromSong={() => {}}
+        onUseAsTemplate={() => {}}
+        onNewChord={() => {}}
+      />
+    )
+    const noteButton = screen.getByRole('button', { name: 'A' })
+    expect(noteButton).toHaveAttribute('title')
+  })
+
+  it('new chord button has title attribute', () => {
+    render(
+      <ChordLibrary
+        chords={chords}
+        songChordIds={[]}
+        onAddToSong={() => {}}
+        onRemoveFromSong={() => {}}
+        onUseAsTemplate={() => {}}
+        onNewChord={() => {}}
+      />
+    )
+    expect(screen.getByRole('button', { name: /new chord/i })).toHaveAttribute('title')
+  })
 })

@@ -43,6 +43,7 @@ export function SongView({
           </select>
           <button
             onClick={onNewSong}
+            title="Create a new song"
             className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
           >
             New Song
@@ -83,6 +84,7 @@ export function SongView({
         </select>
         <button
           onClick={onNewSong}
+          title="Create a new song"
           className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
         >
           New Song
@@ -98,18 +100,21 @@ export function SongView({
         />
         <button
           onClick={() => onSaveSong(currentSong)}
+          title="Save current song"
           className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
         >
           Save
         </button>
         <button
           onClick={() => onDeleteSong(currentSong.id)}
+          title="Delete current song"
           className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
         >
           Delete
         </button>
         <button
           onClick={() => window.print()}
+          title="Print current song"
           className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700"
         >
           Print
@@ -128,6 +133,7 @@ export function SongView({
               <button
                 onClick={() => onRemoveChordFromSong(chord.id)}
                 aria-label={`Remove ${chord.name}`}
+                title={`Remove ${chord.name} from song`}
                 className="absolute top-0 right-0 opacity-0 group-hover:opacity-100 transition-opacity text-xs px-1.5 py-0.5 bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300 rounded"
               >
                 ×

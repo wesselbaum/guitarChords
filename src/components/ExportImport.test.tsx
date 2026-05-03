@@ -19,4 +19,14 @@ describe('ExportImport', () => {
     await userEvent.click(screen.getByRole('button', { name: /export/i }))
     expect(onExport).toHaveBeenCalledOnce()
   })
+
+  it('export button has title attribute', () => {
+    render(<ExportImport onExport={() => ''} onImport={() => {}} />)
+    expect(screen.getByRole('button', { name: /export/i })).toHaveAttribute('title')
+  })
+
+  it('import button has title attribute', () => {
+    render(<ExportImport onExport={() => ''} onImport={() => {}} />)
+    expect(screen.getByRole('button', { name: /import/i })).toHaveAttribute('title')
+  })
 })

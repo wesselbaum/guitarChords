@@ -176,6 +176,7 @@ export function ChordEditor({ onSave, onCancel, initialChord }: ChordEditorProps
         <button
           type="button"
           onClick={onCancel}
+          title="Cancel editing"
           className="px-4 py-2 border rounded hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-gray-200"
         >
           Cancel
@@ -183,6 +184,7 @@ export function ChordEditor({ onSave, onCancel, initialChord }: ChordEditorProps
         <button
           type="button"
           onClick={handleSave}
+          title="Save chord"
           className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
         >
           Save
