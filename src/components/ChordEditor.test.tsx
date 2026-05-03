@@ -154,6 +154,49 @@ describe('ChordEditor', () => {
     expect(screen.getByRole('button', { name: /cancel/i })).toHaveAttribute('title')
   })
 
+  it('clears fret and finger when clicking same fret again', async () => {
+    const handleSave = vi.fn()
+    render(<ChordEditor onSave={handleSave} onCancel={() => {}} />)
+
+    // Click fret 1 on string 0 to place
+    await userEvent.click(screen.getByTestId('fret-0-0'))
+    // Click same fret again to clear
+    await userEvent.click(screen.getByTestId('fret-0-0'))
+
+    await userEvent.click(screen.getByRole('button', { name: /save/i }))
+    const savedChord = handleSave.mock.calls[0]![0] as Chord
+    expect(savedChord.strings[0]).toBe(0)
+    expect(savedChord.fingers[0]).toBeNull()
+  })
+
+  it('toggles string between muted and open', async () => {
+    const handleSave = vi.fn()
+    render(<ChordEditor onSave={handleSave} onCancel={() => {}} />)
+
+    // Toggle string 0 to muted (null)
+    await userEvent.click(screen.getByTestId('string-toggle-0'))
+    // Toggle string 0 back to open (0)
+    await userEvent.click(screen.getByTestId('string-toggle-0'))
+
+    await userEvent.click(screen.getByRole('button', { name: /save/i }))
+    const savedChord = handleSave.mock.calls[0]![0] as Chord
+    expect(savedChord.strings[0]).toBe(0)
+    expect(savedChord.fingers[0]).toBeNull()
+  })
+
+  it('sets string to muted (null) when toggling open string', async () => {
+    const handleSave = vi.fn()
+    render(<ChordEditor onSave={handleSave} onCancel={() => {}} />)
+
+    // Default string is open (0), toggle to muted
+    await userEvent.click(screen.getByTestId('string-toggle-0'))
+
+    await userEvent.click(screen.getByRole('button', { name: /save/i }))
+    const savedChord = handleSave.mock.calls[0]![0] as Chord
+    expect(savedChord.strings[0]).toBeNull()
+    expect(savedChord.fingers[0]).toBeNull()
+  })
+
   it('reuses finger number when clicking same fret on multiple strings', async () => {
     const handleSave = vi.fn()
     render(<ChordEditor onSave={handleSave} onCancel={() => {}} />)
@@ -171,5 +214,31 @@ describe('ChordEditor', () => {
     expect(savedChord.fingers[2]).toBe(1)
     expect(savedChord.fingers[3]).toBe(1)
     expect(savedChord.barres).toEqual([1])
+  })
+
+  it('shows start fret indicator when startFret is greater than 1', () => {
+    const chordAtHighFret: Chord = {
+      ...mockChord,
+      strings: [null, 0, 5, 5, 4, 0],
+      fingers: [null, null, 2, 3, 1, null],
+      startFret: 3,
+    }
+    const { container } = render(
+      <ChordEditor onSave={() => {}} onCancel={() => {}} initialChord={chordAtHighFret} />
+    )
+    // Should display "3fr" text in the SVG
+    const allTexts = Array.from(container.querySelectorAll('text'))
+    const frText = allTexts.find((t) => t.textContent?.includes('fr'))
+    expect(frText).toBeTruthy()
+    expect(frText!.textContent).toBe('3fr')
+  })
+
+  it('does not show start fret indicator when startFret is 1', () => {
+    const { container } = render(
+      <ChordEditor onSave={() => {}} onCancel={() => {}} initialChord={mockChord} />
+    )
+    const allTexts = Array.from(container.querySelectorAll('text'))
+    const frText = allTexts.find((t) => t.textContent?.includes('fr'))
+    expect(frText).toBeUndefined()
   })
 })
