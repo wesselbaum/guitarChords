@@ -17,22 +17,24 @@ import type { DiagramSize } from './chordDiagramLayout'
 interface ChordDiagramProps {
   chord: Chord
   size?: DiagramSize
+  responsive?: boolean
 }
 
-export function ChordDiagram({ chord, size = 'md' }: ChordDiagramProps) {
-  const dims = SIZES[size]
+export function ChordDiagram({ chord, size = 'md', responsive = false }: ChordDiagramProps) {
+  const dims = SIZES[responsive ? 'lg' : size]
   const layout = calculateLayout(dims.width, dims.height)
   const showNut = chord.startFret <= 1
   const barreStringSet = getBarreStringSet(chord)
 
   return (
     <div className="flex flex-col items-center">
-      <span className="font-bold text-sm mb-1 dark:text-gray-100">{chord.name}</span>
+      <span className={`font-bold mb-1 dark:text-gray-100 ${responsive ? 'text-base' : 'text-sm'}`}>{chord.name}</span>
       <svg
-        width={dims.width}
-        height={dims.height}
+        {...(responsive
+          ? { className: 'w-full h-auto text-gray-900 dark:text-gray-100' }
+          : { width: dims.width, height: dims.height, className: 'text-gray-900 dark:text-gray-100' }
+        )}
         viewBox={`0 0 ${dims.width} ${dims.height}`}
-        className="text-gray-900 dark:text-gray-100"
       >
         {/* Nut or top fret line */}
         <line
