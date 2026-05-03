@@ -26,22 +26,22 @@ describe('ChordCard', () => {
     expect(container.querySelector('svg')).toBeInTheDocument()
   })
 
-  it('calls onAddToSong when add button is clicked', async () => {
-    const onAdd = vi.fn()
-    render(<ChordCard chord={amChord} onAddToSong={onAdd} />)
-    await userEvent.click(screen.getByRole('button', { name: /add.*song/i }))
-    expect(onAdd).toHaveBeenCalledWith('am')
+  it('calls onPick when pick button is clicked', async () => {
+    const onPick = vi.fn()
+    render(<ChordCard chord={amChord} onPick={onPick} />)
+    await userEvent.click(screen.getByRole('button', { name: /pick chord/i }))
+    expect(onPick).toHaveBeenCalledWith('am')
   })
 
-  it('calls onRemoveFromSong when remove button is clicked', async () => {
-    const onRemove = vi.fn()
-    render(<ChordCard chord={amChord} isInSong onRemoveFromSong={onRemove} />)
-    await userEvent.click(screen.getByRole('button', { name: /remove.*song/i }))
-    expect(onRemove).toHaveBeenCalledWith('am')
+  it('calls onUnpick when unpick button is clicked', async () => {
+    const onUnpick = vi.fn()
+    render(<ChordCard chord={amChord} isPicked onUnpick={onUnpick} />)
+    await userEvent.click(screen.getByRole('button', { name: /remove from picked/i }))
+    expect(onUnpick).toHaveBeenCalledWith('am')
   })
 
-  it('shows selected state when chord is in song', () => {
-    const { container } = render(<ChordCard chord={amChord} isInSong />)
+  it('shows selected state when chord is picked', () => {
+    const { container } = render(<ChordCard chord={amChord} isPicked />)
     expect(container.firstChild).toHaveClass('ring-2')
   })
 
@@ -63,18 +63,49 @@ describe('ChordCard', () => {
     expect(screen.queryByText('Custom')).not.toBeInTheDocument()
   })
 
-  it('add-to-song button has title attribute', () => {
-    render(<ChordCard chord={amChord} onAddToSong={() => {}} />)
-    expect(screen.getByRole('button', { name: /add.*song/i })).toHaveAttribute('title')
+  it('pick button has title attribute', () => {
+    render(<ChordCard chord={amChord} onPick={() => {}} />)
+    expect(screen.getByRole('button', { name: /pick chord/i })).toHaveAttribute('title')
   })
 
-  it('remove-from-song button has title attribute', () => {
-    render(<ChordCard chord={amChord} isInSong onRemoveFromSong={() => {}} />)
-    expect(screen.getByRole('button', { name: /remove.*song/i })).toHaveAttribute('title')
+  it('unpick button has title attribute', () => {
+    render(<ChordCard chord={amChord} isPicked onUnpick={() => {}} />)
+    expect(screen.getByRole('button', { name: /remove from picked/i })).toHaveAttribute('title')
   })
 
   it('use-as-template button has title attribute', () => {
     render(<ChordCard chord={amChord} onUseAsTemplate={() => {}} />)
     expect(screen.getByRole('button', { name: /template/i })).toHaveAttribute('title')
+  })
+
+  it('shows delete button for custom chords when onDeleteChord provided', () => {
+    const customChord = { ...amChord, isCustom: true }
+    render(<ChordCard chord={customChord} onDeleteChord={() => {}} />)
+    expect(screen.getByRole('button', { name: /delete.*chord/i })).toBeInTheDocument()
+  })
+
+  it('does not show delete button for default chords', () => {
+    render(<ChordCard chord={amChord} onDeleteChord={() => {}} />)
+    expect(screen.queryByRole('button', { name: /delete.*chord/i })).not.toBeInTheDocument()
+  })
+
+  it('does not show delete button when onDeleteChord not provided', () => {
+    const customChord = { ...amChord, isCustom: true }
+    render(<ChordCard chord={customChord} />)
+    expect(screen.queryByRole('button', { name: /delete.*chord/i })).not.toBeInTheDocument()
+  })
+
+  it('calls onDeleteChord with chord id when delete button clicked', async () => {
+    const onDelete = vi.fn()
+    const customChord = { ...amChord, id: 'custom-am', isCustom: true }
+    render(<ChordCard chord={customChord} onDeleteChord={onDelete} />)
+    await userEvent.click(screen.getByRole('button', { name: /delete.*chord/i }))
+    expect(onDelete).toHaveBeenCalledWith('custom-am')
+  })
+
+  it('delete button has title attribute', () => {
+    const customChord = { ...amChord, isCustom: true }
+    render(<ChordCard chord={customChord} onDeleteChord={() => {}} />)
+    expect(screen.getByRole('button', { name: /delete.*chord/i })).toHaveAttribute('title')
   })
 })

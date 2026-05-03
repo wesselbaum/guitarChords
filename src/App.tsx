@@ -5,20 +5,22 @@ import { useAppStore } from './hooks/useAppStore'
 import { useTheme } from './hooks/useTheme'
 import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts'
 import { ChordLibrary } from './components/ChordLibrary'
-import { SongView } from './components/SongView'
+import { PickedChordsView } from './components/PickedChordsView'
+import { SongManager } from './components/SongManager'
 import { ChordEditor } from './components/ChordEditor'
 import { ThemeToggle } from './components/ThemeToggle'
 import { ExportImport } from './components/ExportImport'
 import { FingerLegend } from './components/FingerLegend'
+import { ViewTabs } from './components/ViewTabs'
 
-type MainView = 'song' | 'editor'
+type MainView = 'picked' | 'songs' | 'editor'
 const THEME_CYCLE = { light: 'dark', dark: 'system', system: 'light' } as const
 
 function App() {
   const { theme, setTheme } = useTheme()
   const store = useAppStore()
-  const [mainView, setMainView] = useState<MainView>('song')
-  const [currentSong, setCurrentSong] = useState<Song | null>(null)
+  const [mainView, setMainView] = useState<MainView>('picked')
+  const [pickedChordIds, setPickedChordIds] = useState<string[]>([])
   const [editorChord, setEditorChord] = useState<Chord | undefined>(undefined)
   const [sidebarOpen, setSidebarOpen] = useState(true)
 
@@ -29,74 +31,70 @@ function App() {
     return [...visible, ...store.customChords]
   }, [store.customChords, store.hiddenDefaultChordIds])
 
-  const songChordIds = currentSong?.chordIds ?? []
+  const pickedChords = useMemo(() => {
+    return pickedChordIds
+      .map((id) => allChords.find((c) => c.id === id))
+      .filter((c): c is Chord => c !== undefined)
+  }, [pickedChordIds, allChords])
 
-  const handleAddToSong = useCallback((chordId: string) => {
-    setCurrentSong((prev) => {
-      if (!prev) return prev
-      if (prev.chordIds.includes(chordId)) return prev
-      return { ...prev, chordIds: [...prev.chordIds, chordId] }
+  const handlePick = useCallback((chordId: string) => {
+    setPickedChordIds((prev) => {
+      if (prev.includes(chordId)) return prev
+      return [...prev, chordId]
     })
   }, [])
 
-  const handleRemoveFromSong = useCallback((chordId: string) => {
-    setCurrentSong((prev) => {
-      if (!prev) return prev
-      return { ...prev, chordIds: prev.chordIds.filter((id) => id !== chordId) }
-    })
+  const handleUnpick = useCallback((chordId: string) => {
+    setPickedChordIds((prev) => prev.filter((id) => id !== chordId))
   }, [])
 
-  const handleNewSong = useCallback(() => {
+  const handleClearAll = useCallback(() => setPickedChordIds([]), [])
+
+  const handleSaveAsSong = useCallback(() => {
+    const name = prompt('Song name:')
+    if (!name?.trim()) return
     const song: Song = {
       id: crypto.randomUUID(),
-      name: 'New Song',
-      chordIds: [],
+      name: name.trim(),
+      chordIds: [...pickedChordIds],
       createdAt: Date.now(),
     }
-    setCurrentSong(song)
-    setMainView('song')
+    store.addSong(song)
+  }, [pickedChordIds, store])
+
+  const handleLoadSong = useCallback((song: Song) => {
+    setPickedChordIds(song.chordIds)
+    setMainView('picked')
   }, [])
 
-  const handleSaveSong = useCallback((song: Song) => {
-    const existing = store.songs.find((s) => s.id === song.id)
-    if (existing) {
-      store.updateSong(song)
-    } else {
-      store.addSong(song)
-    }
-  }, [store])
-
   const handleNewChord = useCallback(() => {
-    setEditorChord(undefined)
-    setMainView('editor')
+    setEditorChord(undefined); setMainView('editor')
   }, [])
 
   const handleUseAsTemplate = useCallback((chord: Chord) => {
-    setEditorChord(chord)
-    setMainView('editor')
+    setEditorChord(chord); setMainView('editor')
   }, [])
 
   const handleSaveChord = useCallback((chord: Chord) => {
-    store.addCustomChord(chord)
-    setMainView('song')
+    store.addCustomChord(chord); setMainView('picked')
   }, [store])
 
-  const handleCancelEditor = useCallback(() => {
-    setMainView('song')
-  }, [])
+  const handleCancelEditor = useCallback(() => setMainView('picked'), [])
 
   const handleThemeToggle = useCallback(() => {
     setTheme(THEME_CYCLE[theme])
   }, [theme, setTheme])
 
   const handleFocusSearch = useCallback(() => {
-    const input = document.querySelector<HTMLInputElement>('input[placeholder*="Search"]')
+    const input = document.querySelector<HTMLInputElement>(
+      'input[placeholder*="Search"]'
+    )
     input?.focus()
   }, [])
 
   useKeyboardShortcuts({
     '/': handleFocusSearch,
-    'escape': handleCancelEditor,
+    escape: handleCancelEditor,
     'ctrl+e': handleNewChord,
     'ctrl+p': () => window.print(),
     'ctrl+shift+d': handleThemeToggle,
@@ -104,7 +102,6 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 flex flex-col">
-      {/* Header */}
       <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 py-3 flex items-center justify-between print:hidden">
         <div className="flex items-center gap-3">
           <button
@@ -120,17 +117,12 @@ function App() {
           <h1 className="text-xl font-bold">Guitar Chord Reference</h1>
         </div>
         <div className="flex items-center gap-3">
-          <ExportImport
-            onExport={store.exportData}
-            onImport={store.importData}
-          />
+          <ExportImport onExport={store.exportData} onImport={store.importData} />
           <ThemeToggle theme={theme} onToggle={handleThemeToggle} />
         </div>
       </header>
 
-      {/* Main layout */}
       <div className="flex flex-1 overflow-hidden">
-        {/* Sidebar */}
         <aside
           className={`
             ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
@@ -145,15 +137,15 @@ function App() {
         >
           <ChordLibrary
             chords={allChords}
-            songChordIds={songChordIds}
-            onAddToSong={handleAddToSong}
-            onRemoveFromSong={handleRemoveFromSong}
+            pickedChordIds={pickedChordIds}
+            onPick={handlePick}
+            onUnpick={handleUnpick}
             onUseAsTemplate={handleUseAsTemplate}
             onNewChord={handleNewChord}
+            onDeleteChord={store.removeCustomChord}
           />
         </aside>
 
-        {/* Overlay for mobile sidebar */}
         {sidebarOpen && (
           <div
             className="fixed inset-0 z-10 bg-black/30 lg:hidden"
@@ -161,20 +153,31 @@ function App() {
           />
         )}
 
-        {/* Main content */}
         <main className="flex-1 overflow-y-auto">
-          {mainView === 'song' ? (
-            <SongView
-              songs={store.songs}
-              allChords={allChords}
-              onSaveSong={handleSaveSong}
-              onDeleteSong={store.removeSong}
-              onRemoveChordFromSong={handleRemoveFromSong}
-              currentSong={currentSong}
-              onSelectSong={setCurrentSong}
-              onNewSong={handleNewSong}
+          {mainView !== 'editor' && (
+            <ViewTabs
+              activeView={mainView}
+              onChangeView={setMainView}
+              pickedCount={pickedChordIds.length}
+              songsCount={store.songs.length}
             />
-          ) : (
+          )}
+          {mainView === 'picked' && (
+            <PickedChordsView
+              pickedChords={pickedChords}
+              onRemoveChord={handleUnpick}
+              onClearAll={handleClearAll}
+              onSaveAsSong={handleSaveAsSong}
+            />
+          )}
+          {mainView === 'songs' && (
+            <SongManager
+              songs={store.songs}
+              onLoadSong={handleLoadSong}
+              onDeleteSong={store.removeSong}
+            />
+          )}
+          {mainView === 'editor' && (
             <div className="p-4 max-w-2xl mx-auto">
               <ChordEditor
                 onSave={handleSaveChord}
@@ -186,7 +189,6 @@ function App() {
         </main>
       </div>
 
-      {/* Finger color legend — bottom right */}
       <div className="fixed bottom-4 right-4 z-10 opacity-80 hover:opacity-100 transition-opacity print:hidden">
         <FingerLegend />
       </div>

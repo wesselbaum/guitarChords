@@ -48,9 +48,9 @@ describe('ChordLibrary', () => {
     render(
       <ChordLibrary
         chords={chords}
-        songChordIds={[]}
-        onAddToSong={() => {}}
-        onRemoveFromSong={() => {}}
+        pickedChordIds={[]}
+        onPick={() => {}}
+        onUnpick={() => {}}
         onUseAsTemplate={() => {}}
         onNewChord={() => {}}
       />
@@ -65,9 +65,9 @@ describe('ChordLibrary', () => {
     render(
       <ChordLibrary
         chords={chords}
-        songChordIds={[]}
-        onAddToSong={() => {}}
-        onRemoveFromSong={() => {}}
+        pickedChordIds={[]}
+        onPick={() => {}}
+        onUnpick={() => {}}
         onUseAsTemplate={() => {}}
         onNewChord={() => {}}
       />
@@ -82,9 +82,9 @@ describe('ChordLibrary', () => {
     render(
       <ChordLibrary
         chords={chords}
-        songChordIds={[]}
-        onAddToSong={() => {}}
-        onRemoveFromSong={() => {}}
+        pickedChordIds={[]}
+        onPick={() => {}}
+        onUnpick={() => {}}
         onUseAsTemplate={() => {}}
         onNewChord={() => {}}
       />
@@ -100,9 +100,9 @@ describe('ChordLibrary', () => {
     render(
       <ChordLibrary
         chords={chords}
-        songChordIds={[]}
-        onAddToSong={() => {}}
-        onRemoveFromSong={() => {}}
+        pickedChordIds={[]}
+        onPick={() => {}}
+        onUnpick={() => {}}
         onUseAsTemplate={() => {}}
         onNewChord={() => {}}
       />
@@ -120,9 +120,9 @@ describe('ChordLibrary', () => {
     render(
       <ChordLibrary
         chords={chords}
-        songChordIds={[]}
-        onAddToSong={() => {}}
-        onRemoveFromSong={() => {}}
+        pickedChordIds={[]}
+        onPick={() => {}}
+        onUnpick={() => {}}
         onUseAsTemplate={() => {}}
         onNewChord={onNew}
       />
@@ -131,13 +131,13 @@ describe('ChordLibrary', () => {
     expect(onNew).toHaveBeenCalledOnce()
   })
 
-  it('marks chords that are in current song', () => {
+  it('marks chords that are picked', () => {
     render(
       <ChordLibrary
         chords={chords}
-        songChordIds={['am']}
-        onAddToSong={() => {}}
-        onRemoveFromSong={() => {}}
+        pickedChordIds={['am']}
+        onPick={() => {}}
+        onUnpick={() => {}}
         onUseAsTemplate={() => {}}
         onNewChord={() => {}}
       />
@@ -151,9 +151,9 @@ describe('ChordLibrary', () => {
     render(
       <ChordLibrary
         chords={chords}
-        songChordIds={[]}
-        onAddToSong={() => {}}
-        onRemoveFromSong={() => {}}
+        pickedChordIds={[]}
+        onPick={() => {}}
+        onUnpick={() => {}}
         onUseAsTemplate={() => {}}
         onNewChord={() => {}}
       />
@@ -166,13 +166,53 @@ describe('ChordLibrary', () => {
     render(
       <ChordLibrary
         chords={chords}
-        songChordIds={[]}
-        onAddToSong={() => {}}
-        onRemoveFromSong={() => {}}
+        pickedChordIds={[]}
+        onPick={() => {}}
+        onUnpick={() => {}}
         onUseAsTemplate={() => {}}
         onNewChord={() => {}}
       />
     )
     expect(screen.getByRole('button', { name: /new chord/i })).toHaveAttribute('title')
+  })
+
+  it('shows delete button for custom chords when onDeleteChord provided', () => {
+    const baseChord = chords[0] as Chord
+    const customChords: Chord[] = [
+      { ...baseChord, id: 'custom-am', isCustom: true },
+    ]
+    render(
+      <ChordLibrary
+        chords={customChords}
+        pickedChordIds={[]}
+        onPick={() => {}}
+        onUnpick={() => {}}
+        onUseAsTemplate={() => {}}
+        onNewChord={() => {}}
+        onDeleteChord={() => {}}
+      />
+    )
+    expect(screen.getByRole('button', { name: /delete.*chord/i })).toBeInTheDocument()
+  })
+
+  it('calls onDeleteChord when delete button is clicked on custom chord', async () => {
+    const onDelete = vi.fn()
+    const baseChord = chords[0] as Chord
+    const customChords: Chord[] = [
+      { ...baseChord, id: 'custom-am', isCustom: true },
+    ]
+    render(
+      <ChordLibrary
+        chords={customChords}
+        pickedChordIds={[]}
+        onPick={() => {}}
+        onUnpick={() => {}}
+        onUseAsTemplate={() => {}}
+        onNewChord={() => {}}
+        onDeleteChord={onDelete}
+      />
+    )
+    await userEvent.click(screen.getByRole('button', { name: /delete.*chord/i }))
+    expect(onDelete).toHaveBeenCalledWith('custom-am')
   })
 })

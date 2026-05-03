@@ -46,21 +46,23 @@ Use this section to skip exploratory reads on future tasks.
 
 ```
 src/
-  App.tsx              — Root component. Header, sidebar, main view routing (song|editor)
+  App.tsx              — Root component. Header, sidebar, tab routing (picked|songs|editor)
   main.tsx             — Entry point (no tests needed)
   types/chord.ts       — All shared types (Chord, Song, ThemeMode, etc.)
   data/defaultChords.ts — Built-in chord library
   hooks/
-    useAppStore.ts     — Zustand store: songs, customChords, hiddenDefaultChordIds, import/export
+    useAppStore.ts     — Custom hook store: songs, customChords, hiddenDefaultChordIds, import/export
     useTheme.ts        — Theme state (light/dark/system) + localStorage sync
     useKeyboardShortcuts.ts — Global hotkeys (/, Esc, Ctrl+E, Ctrl+P, Ctrl+Shift+D)
   components/
     ChordLibrary.tsx   — Sidebar: search + root-note filter + chord grid + "New Chord" button
-    ChordCard.tsx      — Single chord card: diagram + add/remove/template buttons
+    ChordCard.tsx      — Single chord card: diagram + pick/unpick/template/delete buttons
     ChordDiagram.tsx   — SVG chord diagram renderer (read-only)
     ChordEditor.tsx    — Form: name/root/category/startFret + EditorFretboard + Save/Cancel
     EditorFretboard.tsx — Interactive SVG fretboard (click frets, toggle strings, cycle fingers)
-    SongView.tsx       — Song selector + name input + Save/Delete/Print + chord strip with remove
+    PickedChordsView.tsx — Default main view: picked chord grid + Save as Song + Clear All
+    SongManager.tsx    — Saved songs list: Load/Delete per song
+    ViewTabs.tsx       — Tab navigation between Picked Chords and Saved Songs views
     ThemeToggle.tsx    — Theme cycle button (light→dark→system)
     ExportImport.tsx   — Export/Import JSON backup buttons
     FingerLegend.tsx   — Color legend for finger numbers

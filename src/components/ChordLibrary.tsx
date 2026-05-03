@@ -6,20 +6,22 @@ const ROOT_NOTES = ['A', 'B', 'C', 'D', 'E', 'F', 'G'] as const
 
 interface ChordLibraryProps {
   chords: Chord[]
-  songChordIds: string[]
-  onAddToSong: (id: string) => void
-  onRemoveFromSong: (id: string) => void
+  pickedChordIds: string[]
+  onPick: (id: string) => void
+  onUnpick: (id: string) => void
   onUseAsTemplate: (chord: Chord) => void
   onNewChord: () => void
+  onDeleteChord?: (id: string) => void
 }
 
 export function ChordLibrary({
   chords,
-  songChordIds,
-  onAddToSong,
-  onRemoveFromSong,
+  pickedChordIds,
+  onPick,
+  onUnpick,
   onUseAsTemplate,
   onNewChord,
+  onDeleteChord,
 }: ChordLibraryProps) {
   const [search, setSearch] = useState('')
   const [rootFilter, setRootFilter] = useState<string | null>(null)
@@ -76,10 +78,11 @@ export function ChordLibrary({
             <ChordCard
               key={chord.id}
               chord={chord}
-              isInSong={songChordIds.includes(chord.id)}
-              onAddToSong={onAddToSong}
-              onRemoveFromSong={onRemoveFromSong}
+              isPicked={pickedChordIds.includes(chord.id)}
+              onPick={onPick}
+              onUnpick={onUnpick}
               onUseAsTemplate={onUseAsTemplate}
+              onDeleteChord={onDeleteChord}
             />
           ))}
         </div>
